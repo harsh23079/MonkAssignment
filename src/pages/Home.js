@@ -1,94 +1,164 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { database } from "../firebase";
 import { isEmpty } from "lodash";
 function Home() {
-  const initialFormState = {
-    name: "",
-    phoneNumber: "",
-    email: "",
-    profilePic: null,
-    dateOfBirth: "",
-  };
-  // const navigate = useNavigate();
-  const [data, setData] = useState({});
-  const [formdata, setFormdata] = useState(initialFormState);
-  const { name, phoneNumber, email, profilePic, dateOfBirth } = formdata;
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [dob, setDob] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (isEmpty(id)) {
-      const newData = { ...formdata, id: Date.now() };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-      database.ref("details").push(formdata, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          alert("Form submitted successfully");
-        }
-      });
-    } else {
-      // Update data in Firebase
-      database.ref(`details/${id}`).set(formdata, (err) => {
-        if (err) {
-          console.log(err);
-        }
+    // Generate a unique ID for the form submission
+    const id = Date.now().toString();
 
-        alert("Successfully updated");
-      });
-    }
+    // Convert profile picture to data URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const profilePictureDataURL = reader.result;
 
-    setFormdata({});
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value, type } = event.target;
-
-    if (type === "file") {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setFormdata({ ...formdata, [name]: reader.result });
+      const formData = {
+        id, // Add the generated ID to the form data
+        name,
+        phoneNumber,
+        dob,
+        profilePicture: profilePictureDataURL,
+        email,
       };
 
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    } else {
-      setFormdata({ ...formdata, [name]: value });
+      // Save data to local storage
+      const localData = JSON.parse(localStorage.getItem("userData")) || [];
+      localData.push(formData);
+      localStorage.setItem("userData", JSON.stringify(localData));
+
+      // Save data to Firebase
+      database.ref("users").child(id).set(formData);
+
+      // Clear the form after submission
+      setName("");
+      setPhoneNumber("");
+      setDob("");
+      setProfilePicture(null);
+      setEmail("");
+
+      alert("Form submitted successfully");
+      // Show a success toast notification
+      // toast.success("Submitted Successfully!", {
+      //   position: toast.POSITION.TOP_CENTER,
+      // });
+    };
+
+    // Read the selected profile picture as data URL
+    if (profilePicture) {
+      reader.readAsDataURL(profilePicture);
     }
   };
-  let currentId = useParams();
-  const { id } = currentId;
 
-  useEffect(() => {
-    // Load data from local storage
-    // const localData = JSON.parse(localStorage.getItem('userData')) || [];
-    // setData(localData.reduce((obj, item) => ({ ...obj, [item.id]: item }), {}));
+  // const initialFormState = {
+  //   name: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   profilePic: null,
+  //   dateOfBirth: "",
+  // };
+  // const navigate = useNavigate();
+  // const [data, setData] = useState({});
+  // const [formdata, setFormdata] = useState(initialFormState);
+  // const { name, phoneNumber, email, profilePic, dateOfBirth } = formdata;
 
-    // Load data from Firebase
-    database.ref("details").on("value", (snapshot) => {
-      if (snapshot.val() != null) {
-        setData({
-          ...snapshot.val(),
-        });
-      } else {
-        snapshot({});
-      }
-    });
-  }, [id]);
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   if (isEmpty(id)) {
+  //     const newData = { ...formdata, id: Date.now() };
 
-  useEffect(() => {
-    if (isEmpty(id)) {
-      setFormdata({
-        ...initialFormState,
-      });
-    } else {
-      setFormdata({ ...data[id] });
-    }
-  }, [id, data]);
+  //     // Save data in local storage
+  //     const localData = JSON.parse(localStorage.getItem("userData")) || [];
+  //     localData.push(newData);
+  //     localStorage.setItem("userData", JSON.stringify(localData));
+
+  //     database.ref("details").push(formdata, (err) => {
+  //       if (err) {
+  //         console.log(err);
+  //       } else {
+  //         alert("Form submitted successfully");
+  //       }
+  //     });
+  //   } else {
+  //     // Update data in local storage
+
+  //     const localData = JSON.parse(localStorage.getItem("userData")) || [];
+  //     console.log(id);
+  //     console.log("Before update:", localData);
+  //     const updatedData = localData.map((item) =>
+  //       item.id === id ? { ...item, ...formdata } : item
+  //     );
+  //     console.log("After update:", updatedData);
+  //     localStorage.setItem("userData", JSON.stringify(updatedData));
+
+  //     // Update data in Firebase
+  //     database.ref(`details/${id}`).set(formdata, (err) => {
+  //       if (err) {
+  //         console.log(err);
+  //       }
+
+  //       alert("Successfully updated");
+  //     });
+  //   }
+
+  //   setFormdata({});
+  // };
+
+  // const handleInputChange = (event) => {
+  //   const { name, value, type } = event.target;
+
+  //   if (type === "file") {
+  //     const file = event.target.files[0];
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       setFormdata({ ...formdata, [name]: reader.result });
+  //     };
+
+  //     if (file) {
+  //       reader.readAsDataURL(file);
+  //     }
+  //   } else {
+  //     setFormdata({ ...formdata, [name]: value });
+  //   }
+  // };
+  // let currentId = useParams();
+  // const { id } = currentId;
+
+  // useEffect(() => {
+  //   // Load data from local storage
+  //   const localData = JSON.parse(localStorage.getItem("userData")) || [];
+  //   setData(localData.reduce((obj, item) => ({ ...obj, [item.id]: item }), {}));
+
+  //   // Load data from Firebase
+  //   database.ref("details").on("value", (snapshot) => {
+  //     if (snapshot.val() != null) {
+  //       setData({
+  //         ...snapshot.val(),
+  //       });
+  //     } else {
+  //       snapshot({});
+  //     }
+  //   });
+  // }, [id]);
+
+  // useEffect(() => {
+  //   if (isEmpty(id)) {
+  //     setFormdata({
+  //       ...initialFormState,
+  //     });
+  //   } else {
+  //     setFormdata({ ...data[id] });
+  //   }
+  // }, [id, data]);
 
   return (
     <main className="flex  flex-col   gap-5 lg:gap-0 ">
@@ -107,81 +177,97 @@ function Home() {
               <div className="flex flex-col md:flex-row gap-10 ">
                 <div className="flex flex-col gap-5 ">
                   <div>
-                    <label className=" font-extrabold" htmlFor="name ">
+                    <label
+                      className=" font-extrabold text-black dark:text-white"
+                      htmlFor="name "
+                    >
                       Name
                       <span className="text-red-500 text-[18px]"> *</span>
                     </label>
                     <input
-                      className="form-control w-full border-4 rounded-md p-1  text-black text-[14px]"
+                      className="form-control w-full border-4   border-neutral-500 rounded-md p-1  text-black text-[14px]"
                       type="text"
                       name="name"
                       value={name}
-                      onChange={handleInputChange}
+                      onChange={(e) => setName(e.target.value)}
                       // {...register("name")}
                     />
                   </div>
                   <div>
-                    <label className=" font-extrabold" htmlFor="contact">
+                    <label
+                      className=" font-extrabold  text-black dark:text-white"
+                      htmlFor="contact"
+                    >
                       Contact No.
                       <span className="text-red-500 text-[18px]"> *</span>
                     </label>
                     <input
-                      className="form-control w-full border-4 rounded-md p-1   text-black   text-[14px] bg-white "
+                      className="form-control w-full border-4  border-neutral-500 rounded-md p-1   text-black   text-[14px] bg-white "
                       type="text"
                       name="phoneNumber"
                       value={phoneNumber}
-                      onChange={handleInputChange}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                       // {...register("contact")}
                     />
                   </div>
                   <div className=" ">
-                    <label className=" font-extrabold" htmlFor="email">
+                    <label
+                      className=" font-extrabold  text-black dark:text-white"
+                      htmlFor="email"
+                    >
                       Email
                       <span className="text-red-500 text-[18px]"> *</span>
                     </label>
                     <input
-                      className="form-control w-full border-4 rounded-md p-1   text-black   text-[14px] bg-white "
+                      className="form-control w-full border-4  border-neutral-500 rounded-md p-1   text-black   text-[14px] bg-white "
                       type="email"
                       name="email"
                       value={email}
-                      onChange={handleInputChange}
+                      onChange={(e) => setEmail(e.target.value)}
                       // {...register("email")}
                     />
                   </div>
 
                   <div className="">
-                    <label className=" font-extrabold" htmlFor="dob">
+                    <label
+                      className=" font-extrabold  text-black dark:text-white"
+                      htmlFor="dob"
+                    >
                       Date of birth
                       <span className="text-red-500 text-[18px]"> *</span>
                     </label>
                     <input
-                      className="form-control w-full border-4 rounded-md p-1  text-black text-[14px]"
+                      className="form-control w-full border-4  border-neutral-500 rounded-md p-1  text-black text-[14px]"
                       type="date"
                       name="dateOfBirth"
-                      value={dateOfBirth}
-                      onChange={handleInputChange}
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
                       // {...register("dob")}
                     />
                   </div>
-                  <div>
+                  {/* <div>
                     <img
                       src={profilePic}
+                      alt="profile"
                       style={{
                         height: "50px",
-                        width: "50px",
+                        width: "60px",
                       }}
                     />
-                  </div>
+                  </div> */}
                   <div>
-                    <label className=" font-extrabold" htmlFor="photo">
+                    <label
+                      className=" font-extrabold  text-black dark:text-white"
+                      htmlFor="photo"
+                    >
                       Upload Photo
                       <span className="text-red-500 text-[18px]"> *</span>
                     </label>
                     <input
-                      className="form-control w-full border-4 bg-white rounded-md p-1   text-black text-[14px]"
+                      className="form-control w-full border-4  border-neutral-500 bg-white rounded-md p-1   text-black text-[14px]"
                       type="file"
-                      name="profilePic"
-                      onChange={handleInputChange}
+                      accept="image/*"
+                      onChange={(e) => setProfilePicture(e.target.files[0])}
                       // onChange={handleDocChange}
                     />
                   </div>
@@ -197,7 +283,6 @@ function Home() {
       </div>
 
       <div className=" grid text-center m-10 lg:grid-cols-2 lg:gap-5  lg:text-left">
-        {/* <Link to="/view2"> */}
         <a
           href="/local"
           className="group  rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
@@ -213,12 +298,10 @@ function Home() {
             You Can See The Entries On Local Storage.
           </p>
         </a>
-        {/* </Link> */}
 
         <a
           href="/firebase"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
