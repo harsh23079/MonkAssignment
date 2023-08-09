@@ -73,15 +73,8 @@ const EditForm = () => {
 
       // Show success notification
       alert("Profile updated successfully!");
-      // toast.success("Profile updated successfully!", { autoClose: 2000 });
-
-      // Navigate back to the LocalStoragePage after editing the user
-      navigate("/local");
     } catch (error) {
       console.error("Error updating profile picture:", error);
-
-      // Show error notification
-      // toast.error("Failed to update profile!", { autoClose: 2000 });
     }
   };
 
@@ -91,64 +84,108 @@ const EditForm = () => {
         {" "}
         <h2 className="text-3xl font-bold">You Can Edit Here</h2>
       </div>
-      <div className="w-60  flex flex-col">
-        <label>Name:</label>
-        <input
-          className=" text-black p-2 border-4  border-neutral-500"
-          type="text"
-          name="name"
-          value={user?.name || ""}
-          onChange={(e) => handleChange("name", e.target.value)}
-        />
+      <div className=" flex flex-col gap-5">
+        <div className=" flex flex-col">
+          <label>Name:</label>
+          <input
+            className=" text-black p-2 border-4 rounded-xl  border-neutral-500"
+            type="text"
+            name="name"
+            value={user?.name || ""}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col ">
+          <label>Phone Number:</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={user?.phoneNumber || ""}
+            onChange={(e) => handleChange("phoneNumber", e.target.value)}
+            className=" text-black p-2 border-4 rounded-xl border-neutral-500"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label>Date of Birth:</label>
+          <input
+            type="date"
+            name="dob"
+            value={user?.dob || ""}
+            onChange={(e) => handleChange("dob", e.target.value)}
+            className=" text-black p-2 border-4 rounded-xl border-neutral-500"
+          />
+        </div>
+        <div className=" flex flex-col">
+          <label>Email:</label>
+          <input
+            className=" text-black p-2 border-4 rounded-xl border-neutral-500"
+            type="email"
+            name="email"
+            value={user?.email || ""}
+            onChange={(e) => handleChange("email", e.target.value)}
+          />
+        </div>
+        <div>
+          <img
+            src={user.profilePicture}
+            alt="profile"
+            style={{
+              height: "50px",
+              width: "60px",
+            }}
+          />
+        </div>
+        <div className=" flex flex-col">
+          <label>Profile Picture:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePictureChange}
+            className="dark:text-white border-4 rounded-xl border-neutral-500 p-2"
+          />
+        </div>
+        <div className="m-auto">
+          <button
+            onClick={handleSave}
+            className="border uppercase px-[50px] py-[15px] rounded-lg mt-5 bg-[#FF0000]  text-white hover:bg-neutral-800"
+          >
+            Update
+          </button>
+        </div>
+        <div className=" grid text-center m-10 lg:grid-cols-2 lg:gap-5  lg:text-left">
+          <a
+            href="/local"
+            className="group  rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+            rel="noopener noreferrer"
+          >
+            <h2 className={`mb-3 text-2xl font-semibold`}>
+              Local{" "}
+              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                -&gt;
+              </span>
+            </h2>
+            <p className={`mx-auto lg:m-0 max-w-[30ch] text-sm opacity-50`}>
+              You Can See The Entries On Local Storage.
+            </p>
+          </a>
+
+          <a
+            href="/firebase"
+            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
+            rel="noopener noreferrer"
+          >
+            <h2 className={`mb-3 text-2xl font-semibold`}>
+              Firebase{" "}
+              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                -&gt;
+              </span>
+            </h2>
+            <p className={`mx-auto lg:m-0 max-w-[30ch] text-sm opacity-50 `}>
+              You Can See The Entries On Firebase Storage.
+            </p>
+          </a>
+        </div>
       </div>
-      <div className="w-60 flex flex-col ">
-        <label>Phone Number:</label>
-        <input
-          type="text"
-          name="phoneNumber"
-          value={user?.phoneNumber || ""}
-          onChange={(e) => handleChange("phoneNumber", e.target.value)}
-          className=" text-black p-2 border-4 border-neutral-500"
-        />
-      </div>
-      <div className="w-60 flex flex-col">
-        <label>Date of Birth:</label>
-        <input
-          type="date"
-          name="dob"
-          value={user?.dob || ""}
-          onChange={(e) => handleChange("dob", e.target.value)}
-          className=" text-black p-2 border-4 border-neutral-500"
-        />
-      </div>
-      <div className="w-60 flex flex-col">
-        <label>Email:</label>
-        <input
-          className=" text-black p-2 border-4 border-neutral-500"
-          type="email"
-          name="email"
-          value={user?.email || ""}
-          onChange={(e) => handleChange("email", e.target.value)}
-        />
-      </div>
-      <div className="w-60 flex flex-col">
-        <label>Profile Picture:</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleProfilePictureChange}
-          className="dark:text-white border-4 border-neutral-500 p-2"
-        />
-      </div>
-      <div className="">
-        <button
-          onClick={handleSave}
-          className="border uppercase px-[50px] py-[15px] rounded-lg mt-5 bg-[#FF0000]  text-white hover:bg-neutral-800"
-        >
-          Update
-        </button>
-      </div>
-      {/* <ToastContainer /> */}
     </div>
   );
 };

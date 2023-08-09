@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-// import Card from "../component/page";
+
 import { useEffect, useState } from "react";
 import { database } from "../firebase";
-// import { useRouter } from "next/router";
+
 import { useNavigate } from "react-router-dom";
 
 function FirebaseStorage() {
@@ -58,14 +58,14 @@ function FirebaseStorage() {
   return (
     <div className="m-10">
       <div className="flex flex-col items-center md:items-start md:p-2 gap-3">
-        <div className="flex flex-col text-2xl  md:text-4xl font-bold">
+        <div className="flex flex-col text-2xl  md:text-4xl font-bold mb-10 border-b-4  border-black dark:border-white">
           <h1>SEE ALL ENTRIES</h1>
         </div>
 
-        <div className=" grid w-full   gap-10    lg:grid-cols-4 sm:grid-cols-2  ">
+        <div className=" grid w-full   gap-10   lg:grid-cols-3 sm:grid-cols-2  ">
           {userData.map((user) => {
             return (
-              <div className="   grid">
+              <div className="border-2 shadow-inner border-black dark:border-white   grid">
                 <div className="p-2">
                   <div className="  mb-2">
                     {user.profilePicture && (

@@ -46,10 +46,6 @@ function Home() {
       setEmail("");
 
       alert("Form submitted successfully");
-      // Show a success toast notification
-      // toast.success("Submitted Successfully!", {
-      //   position: toast.POSITION.TOP_CENTER,
-      // });
     };
 
     // Read the selected profile picture as data URL
@@ -57,108 +53,6 @@ function Home() {
       reader.readAsDataURL(profilePicture);
     }
   };
-
-  // const initialFormState = {
-  //   name: "",
-  //   phoneNumber: "",
-  //   email: "",
-  //   profilePic: null,
-  //   dateOfBirth: "",
-  // };
-  // const navigate = useNavigate();
-  // const [data, setData] = useState({});
-  // const [formdata, setFormdata] = useState(initialFormState);
-  // const { name, phoneNumber, email, profilePic, dateOfBirth } = formdata;
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   if (isEmpty(id)) {
-  //     const newData = { ...formdata, id: Date.now() };
-
-  //     // Save data in local storage
-  //     const localData = JSON.parse(localStorage.getItem("userData")) || [];
-  //     localData.push(newData);
-  //     localStorage.setItem("userData", JSON.stringify(localData));
-
-  //     database.ref("details").push(formdata, (err) => {
-  //       if (err) {
-  //         console.log(err);
-  //       } else {
-  //         alert("Form submitted successfully");
-  //       }
-  //     });
-  //   } else {
-  //     // Update data in local storage
-
-  //     const localData = JSON.parse(localStorage.getItem("userData")) || [];
-  //     console.log(id);
-  //     console.log("Before update:", localData);
-  //     const updatedData = localData.map((item) =>
-  //       item.id === id ? { ...item, ...formdata } : item
-  //     );
-  //     console.log("After update:", updatedData);
-  //     localStorage.setItem("userData", JSON.stringify(updatedData));
-
-  //     // Update data in Firebase
-  //     database.ref(`details/${id}`).set(formdata, (err) => {
-  //       if (err) {
-  //         console.log(err);
-  //       }
-
-  //       alert("Successfully updated");
-  //     });
-  //   }
-
-  //   setFormdata({});
-  // };
-
-  // const handleInputChange = (event) => {
-  //   const { name, value, type } = event.target;
-
-  //   if (type === "file") {
-  //     const file = event.target.files[0];
-  //     const reader = new FileReader();
-
-  //     reader.onloadend = () => {
-  //       setFormdata({ ...formdata, [name]: reader.result });
-  //     };
-
-  //     if (file) {
-  //       reader.readAsDataURL(file);
-  //     }
-  //   } else {
-  //     setFormdata({ ...formdata, [name]: value });
-  //   }
-  // };
-  // let currentId = useParams();
-  // const { id } = currentId;
-
-  // useEffect(() => {
-  //   // Load data from local storage
-  //   const localData = JSON.parse(localStorage.getItem("userData")) || [];
-  //   setData(localData.reduce((obj, item) => ({ ...obj, [item.id]: item }), {}));
-
-  //   // Load data from Firebase
-  //   database.ref("details").on("value", (snapshot) => {
-  //     if (snapshot.val() != null) {
-  //       setData({
-  //         ...snapshot.val(),
-  //       });
-  //     } else {
-  //       snapshot({});
-  //     }
-  //   });
-  // }, [id]);
-
-  // useEffect(() => {
-  //   if (isEmpty(id)) {
-  //     setFormdata({
-  //       ...initialFormState,
-  //     });
-  //   } else {
-  //     setFormdata({ ...data[id] });
-  //   }
-  // }, [id, data]);
 
   return (
     <main className="flex  flex-col   gap-5 lg:gap-0 ">
@@ -190,7 +84,7 @@ function Home() {
                       name="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      // {...register("name")}
+                    
                     />
                   </div>
                   <div>
@@ -207,7 +101,7 @@ function Home() {
                       name="phoneNumber"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      // {...register("contact")}
+                    
                     />
                   </div>
                   <div className=" ">
@@ -224,7 +118,7 @@ function Home() {
                       name="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      // {...register("email")}
+                    
                     />
                   </div>
 
@@ -242,19 +136,10 @@ function Home() {
                       name="dateOfBirth"
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
-                      // {...register("dob")}
+                   
                     />
                   </div>
-                  {/* <div>
-                    <img
-                      src={profilePic}
-                      alt="profile"
-                      style={{
-                        height: "50px",
-                        width: "60px",
-                      }}
-                    />
-                  </div> */}
+
                   <div>
                     <label
                       className=" font-extrabold  text-black dark:text-white"
@@ -268,7 +153,7 @@ function Home() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => setProfilePicture(e.target.files[0])}
-                      // onChange={handleDocChange}
+                    
                     />
                   </div>
                 </div>
@@ -277,7 +162,6 @@ function Home() {
                 Submit
               </button>
             </form>
-            {/* <DevTool control={control} /> */}
           </div>
         </div>
       </div>
